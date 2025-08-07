@@ -1,19 +1,20 @@
 
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 
 export default function ViewFilePage({
   params,
 }: {
-  params: { filename: string };
+  params: Promise<{ filename: string }>;
 }) {
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const filename = decodeURIComponent(params.filename);
+  const { filename } = use(params);
+  const decodedFilename = decodeURIComponent(filename);
 
   useEffect(() => {
     try {
@@ -21,29 +22,34 @@ export default function ViewFilePage({
       if (fileContent) {
         setContent(fileContent);
       } else {
-        setError('File content not found. It might have expired.');
+        setError('File content not found. It might have expired or was not uploaded correctly.');
       }
     } catch (e) {
-      setError('Could not retrieve file content.');
+      setError('Could not retrieve file content due to a browser error.');
     }
   }, []);
+
+  if (error) {
+     router.push('/');
+     return null;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="p-4 border-b flex justify-between items-center">
         <h1 className="text-lg font-semibold">
-          Viewing: {filename}
+          Viewing: {decodedFilename}
         </h1>
         <Button onClick={() => router.push('/')}>Upload New File</Button>
       </header>
       <main className="p-4">
-        {error ? (
-          <div className="text-destructive text-center">{error}</div>
-        ) : (
+        {content ? (
           <div
             className="w-full h-full"
             dangerouslySetInnerHTML={{ __html: content }}
           />
+        ) : (
+           <div>Loading...</div>
         )}
       </main>
     </div>

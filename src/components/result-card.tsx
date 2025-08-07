@@ -41,8 +41,8 @@ export default function ResultCard({
   const [, copy] = useCopyToClipboard();
 
   const handleCopy = () => {
-    const fullUrl = `${window.location.origin}${liveUrl}`;
-    copy(fullUrl)
+    // The liveUrl is now the full public URL from Firebase Storage
+    copy(liveUrl)
       .then(() => {
         toast({
           title: 'Copied to clipboard!',

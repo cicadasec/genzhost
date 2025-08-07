@@ -1,16 +1,15 @@
 
 'use client';
 
-import type { ChangeEvent, DragEvent } from 'react';
 import { useEffect, useState, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import type { ThreatScreenOutput } from '@/ai/flows/threat-screening';
 import { threatScreen } from '@/ai/flows/threat-screening';
 import FileUploadZone from '@/components/file-upload-zone';
 import ResultCard from '@/components/result-card';
 import UploadStatus from '@/components/upload-status';
-import { Button } from '@/components/ui/button';
 import { Logo } from '@/components/logo';
+import { storage } from '@/lib/firebase';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
 type Status =
   | 'idle'
@@ -28,12 +27,11 @@ export default function Home() {
     null
   );
   const [liveUrl, setLiveUrl] = useState('');
-  const router = useRouter();
 
   const handleFileSelect = (selectedFile: File) => {
     if (selectedFile) {
       setFile(selectedFile);
-      setStatus('uploading');
+      setStatus('screening'); // Go straight to screening
     }
   };
 
@@ -46,23 +44,6 @@ export default function Home() {
   };
 
   useEffect(() => {
-    if (status === 'uploading' && file) {
-      const interval = setInterval(() => {
-        setUploadProgress((prev) => {
-          if (prev >= 100) {
-            clearInterval(interval);
-            setStatus('screening');
-            return 100;
-          }
-          return prev + 5;
-        });
-      }, 50);
-
-      return () => clearInterval(interval);
-    }
-  }, [status, file]);
-
-  useEffect(() => {
     if (status === 'screening' && file) {
       const screenFile = async () => {
         try {
@@ -73,8 +54,7 @@ export default function Home() {
           });
           setThreatReport(result);
           if (result.isSafe) {
-            sessionStorage.setItem('fileContent', fileContent);
-            setStatus('success');
+            setStatus('uploading'); // If safe, proceed to upload
           } else {
             setStatus('error');
           }
@@ -93,14 +73,38 @@ export default function Home() {
   }, [status, file]);
 
   useEffect(() => {
-    if (status === 'success' && file) {
-      setLiveUrl(`/view/${encodeURIComponent(file.name)}`);
+    if (status === 'uploading' && file) {
+      const storageRef = ref(storage, `uploads/${Date.now()}-${file.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error('Upload failed:', error);
+          setStatus('error');
+          setThreatReport({
+            isSafe: false,
+            reason: 'File upload failed. Please try again.',
+          });
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setLiveUrl(downloadURL);
+            setStatus('success');
+          });
+        }
+      );
     }
   }, [status, file]);
 
   const handleViewFile = () => {
     if (liveUrl) {
-      router.push(liveUrl);
+      window.open(liveUrl, '_blank');
     }
   };
 
