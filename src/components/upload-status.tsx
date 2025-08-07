@@ -1,3 +1,4 @@
+
 'use client';
 
 import { FileCode, Loader2, ShieldCheck } from 'lucide-react';
@@ -18,7 +19,7 @@ const statusConfig = {
     color: 'text-primary',
   },
   screening: {
-    icon: ShieldCheck,
+    icon: Loader2,
     text: 'Screening for threats...',
     color: 'text-accent',
   },
@@ -40,9 +41,9 @@ export default function UploadStatus({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Progress value={progress} className="w-full" />
+        <Progress value={status === 'screening' ? undefined : progress} className="w-full" />
         <div className="flex items-center justify-center gap-2">
-          <Icon className={cn('h-5 w-5 animate-spin', color, { 'animate-none': status !== 'uploading' })} />
+          <Icon className={cn('h-5 w-5 animate-spin', color)} />
           <p className={cn('font-medium', color)}>{text}</p>
         </div>
       </CardContent>
