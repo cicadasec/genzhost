@@ -13,29 +13,11 @@ export default function Navbar() {
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Logo />
             <span className="font-bold sm:inline-block">
-              Opennote
+              GenZ Host
             </span>
           </Link>
         </div>
-        <div className="flex flex-1 items-center justify-center space-x-6">
-          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Blog</Link>
-          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Pricing</Link>
-        </div>
         <div className="flex flex-1 items-center justify-end">
-          <nav className="flex items-center">
-            <Button
-              variant="accent"
-              size="sm"
-              asChild
-            >
-              <a
-                href="#"
-                rel="noopener noreferrer"
-              >
-                Sign In
-              </a>
-            </Button>
-          </nav>
         </div>
       </div>
     </header>
