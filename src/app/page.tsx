@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import type { ThreatScreenOutput } from '@/ai/flows/threat-screening';
 import { threatScreen } from '@/ai/flows/threat-screening';
 import FileUploadZone from '@/components/file-upload-zone';
@@ -28,20 +28,20 @@ export default function Home() {
   );
   const [liveUrl, setLiveUrl] = useState('');
 
-  const handleFileSelect = (selectedFile: File) => {
+  const handleFileSelect = useCallback((selectedFile: File) => {
     if (selectedFile) {
       setFile(selectedFile);
-      setStatus('screening'); // Go straight to screening
+      setStatus('screening'); 
     }
-  };
+  }, []);
 
-  const resetState = () => {
+  const resetState = useCallback(() => {
     setFile(null);
     setStatus('idle');
     setUploadProgress(0);
     setThreatReport(null);
     setLiveUrl('');
-  };
+  }, []);
 
   useEffect(() => {
     if (status === 'screening' && file) {
@@ -54,7 +54,7 @@ export default function Home() {
           });
           setThreatReport(result);
           if (result.isSafe) {
-            setStatus('uploading'); // If safe, proceed to upload
+            setStatus('uploading'); 
           } else {
             setStatus('error');
           }
@@ -102,11 +102,11 @@ export default function Home() {
     }
   }, [status, file]);
 
-  const handleViewFile = () => {
+  const handleViewFile = useCallback(() => {
     if (liveUrl) {
       window.open(liveUrl, '_blank');
     }
-  };
+  }, [liveUrl]);
 
   const currentComponent = useMemo(() => {
     switch (status) {
@@ -121,6 +121,7 @@ export default function Home() {
             status={status}
           />
         );
+
       case 'success':
       case 'error':
       case 'ai_error':
@@ -136,7 +137,7 @@ export default function Home() {
       default:
         return <FileUploadZone onFileSelect={handleFileSelect} />;
     }
-  }, [status, file, uploadProgress, threatReport, liveUrl]);
+  }, [status, file, uploadProgress, threatReport, liveUrl, handleFileSelect, resetState, handleViewFile]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-4 sm:p-8 bg-background text-foreground">
