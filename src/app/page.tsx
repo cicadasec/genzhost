@@ -151,7 +151,16 @@ export default function Home() {
         </div>
         <footer className="text-center mt-8">
           <p className="text-xs text-muted-foreground">
-            Powered by GenAI. Files are hosted temporarily.
+            Powered by GenAI. Files are hosted temporarily. Created by{' '}
+            <a
+              href="https://linkedin.com/in/cicadasec"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Sahil Ansari
+            </a>
+            .
           </p>
         </footer>
       </div>
