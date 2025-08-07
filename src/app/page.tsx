@@ -1,7 +1,9 @@
+
 'use client';
 
 import type { ChangeEvent, DragEvent } from 'react';
 import { useEffect, useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import type { ThreatScreenOutput } from '@/ai/flows/threat-screening';
 import { threatScreen } from '@/ai/flows/threat-screening';
 import FileUploadZone from '@/components/file-upload-zone';
@@ -26,6 +28,7 @@ export default function Home() {
     null
   );
   const [liveUrl, setLiveUrl] = useState('');
+  const router = useRouter();
 
   const handleFileSelect = (selectedFile: File) => {
     if (selectedFile) {
@@ -70,6 +73,7 @@ export default function Home() {
           });
           setThreatReport(result);
           if (result.isSafe) {
+            sessionStorage.setItem('fileContent', fileContent);
             setStatus('success');
           } else {
             setStatus('error');
@@ -89,14 +93,16 @@ export default function Home() {
   }, [status, file]);
 
   useEffect(() => {
-    if (status === 'success') {
-      const generateUrl = () => {
-        const randomId = Math.random().toString(36).substring(2, 8);
-        setLiveUrl(`https://genzhost-${randomId}.web.app`);
-      };
-      generateUrl();
+    if (status === 'success' && file) {
+      setLiveUrl(`/view/${encodeURIComponent(file.name)}`);
     }
-  }, [status]);
+  }, [status, file]);
+
+  const handleViewFile = () => {
+    if (liveUrl) {
+      router.push(liveUrl);
+    }
+  };
 
   const currentComponent = useMemo(() => {
     switch (status) {
@@ -120,6 +126,7 @@ export default function Home() {
             threatReport={threatReport!}
             liveUrl={liveUrl}
             onReset={resetState}
+            onViewFile={handleViewFile}
           />
         );
       default:

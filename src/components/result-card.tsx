@@ -1,3 +1,4 @@
+
 'use client';
 
 import type { ThreatScreenOutput } from '@/ai/flows/threat-screening';
@@ -26,6 +27,7 @@ interface ResultCardProps {
   threatReport: ThreatScreenOutput;
   liveUrl: string;
   onReset: () => void;
+  onViewFile: () => void;
 }
 
 export default function ResultCard({
@@ -33,12 +35,14 @@ export default function ResultCard({
   threatReport,
   liveUrl,
   onReset,
+  onViewFile,
 }: ResultCardProps) {
   const { toast } = useToast();
   const [, copy] = useCopyToClipboard();
 
   const handleCopy = () => {
-    copy(liveUrl)
+    const fullUrl = `${window.location.origin}${liveUrl}`;
+    copy(fullUrl)
       .then(() => {
         toast({
           title: 'Copied to clipboard!',
@@ -86,14 +90,12 @@ export default function ResultCard({
               Upload Another
             </Button>
             <Button
-              asChild
               className="w-full sm:w-auto"
               variant="accent"
+              onClick={onViewFile}
             >
-              <a href={liveUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" />
-                Live Link
-              </a>
+              <ExternalLink className="mr-2 h-4 w-4" />
+              View File
             </Button>
           </CardFooter>
         </>
