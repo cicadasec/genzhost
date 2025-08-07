@@ -5,5 +5,5 @@ export const ai = genkit({
   plugins: [googleAI({
     requestRetries: 5,
   })],
-  model: 'googleai/gemini-2.0-flash',
+  model: 'googleai/gemini-1.5-flash-latest',
 });
