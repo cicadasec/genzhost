@@ -100,7 +100,7 @@ export default function Home() {
         }
       );
     }
-  }, [status, file]);
+  }, [status, file, liveUrl]);
 
   const handleViewFile = useCallback(() => {
     if (liveUrl) {

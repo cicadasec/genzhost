@@ -25,8 +25,10 @@ export default function RootLayout({
           inter.variable
         )}
       >
-        <Navbar />
-        {children}
+        <div className="container mx-auto p-4">
+          <Navbar />
+          <main>{children}</main>
+        </div>
         <Toaster />
       </body>
     </html>
