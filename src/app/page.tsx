@@ -156,7 +156,7 @@ export default function Home() {
               href="https://linkedin.com/in/cicadasec"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline"
+              className="hover:underline"
             >
               Sahil Ansari
             </a>
