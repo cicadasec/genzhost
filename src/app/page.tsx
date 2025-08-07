@@ -58,12 +58,18 @@ export default function Home() {
           } else {
             setStatus('error');
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('Threat screening failed:', error);
           setStatus('ai_error');
+          // Provide a more user-friendly error message
+          let reason = 'An unexpected error occurred while screening the file.';
+          if (error.message && error.message.includes('503')) {
+            reason =
+              'The AI threat scanner is temporarily unavailable. Please try again in a few moments.';
+          }
           setThreatReport({
             isSafe: false,
-            reason: 'An unexpected error occurred while screening the file.',
+            reason: reason,
           });
         }
       };
@@ -100,7 +106,7 @@ export default function Home() {
         }
       );
     }
-  }, [status, file, liveUrl]);
+  }, [status, file]);
 
   const handleViewFile = useCallback(() => {
     if (liveUrl) {

@@ -58,6 +58,8 @@ export default function ResultCard({
       });
   };
 
+  const isAiError = threatReport.reason.includes('An unexpected error occurred');
+
   return (
     <Card className="w-full max-w-lg animate-fade-in">
       {threatReport.isSafe ? (
@@ -105,7 +107,7 @@ export default function ResultCard({
             <div className="mx-auto bg-destructive/10 rounded-full p-2 w-fit mb-2">
               <AlertTriangle className="h-8 w-8 text-destructive" />
             </div>
-            <CardTitle>Threat Detected</CardTitle>
+            <CardTitle>{isAiError ? 'Error' : 'Threat Detected'}</CardTitle>
             <CardDescription>{threatReport.reason}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
