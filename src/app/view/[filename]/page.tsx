@@ -13,6 +13,7 @@ export default function ViewFilePage({
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
+  const filename = decodeURIComponent(params.filename);
 
   useEffect(() => {
     try {
@@ -31,7 +32,7 @@ export default function ViewFilePage({
     <div className="min-h-screen bg-background text-foreground">
       <header className="p-4 border-b flex justify-between items-center">
         <h1 className="text-lg font-semibold">
-          Viewing: {decodeURIComponent(params.filename)}
+          Viewing: {filename}
         </h1>
         <Button onClick={() => router.push('/')}>Upload New File</Button>
       </header>
