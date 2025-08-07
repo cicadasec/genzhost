@@ -4,34 +4,35 @@
 import Link from 'next/link';
 import { Logo } from './logo';
 import { Button } from './ui/button';
-import { Github } from 'lucide-react';
 
 export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center max-w-screen-2xl">
+      <div className="container flex h-16 items-center max-w-screen-2xl">
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Logo className="h-8 w-8" />
+            <Logo />
             <span className="font-bold sm:inline-block">
-              GenZHost
+              Opennote
             </span>
           </Link>
+        </div>
+        <div className="flex flex-1 items-center justify-center space-x-6">
+          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Blog</Link>
+          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Pricing</Link>
         </div>
         <div className="flex flex-1 items-center justify-end">
           <nav className="flex items-center">
             <Button
-              variant="ghost"
-              size="icon"
+              variant="accent"
+              size="sm"
               asChild
             >
               <a
-                href="https://github.com/firebase/studio-prototyping-examples"
-                target="_blank"
+                href="#"
                 rel="noopener noreferrer"
-                aria-label="github"
               >
-                <Github className="h-5 w-5" />
+                Sign In
               </a>
             </Button>
           </nav>
