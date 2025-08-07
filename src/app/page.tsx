@@ -58,12 +58,12 @@ export default function Home() {
           } else {
             setStatus('error');
           }
-        } catch (error) {
+        } catch (error: any) {
           console.error('Threat screening failed:', error);
           setStatus('ai_error');
           setThreatReport({
             isSafe: false,
-            reason: 'An unexpected error occurred while screening the file.',
+            reason: `An unexpected error occurred while screening the file: ${error.message || 'Unknown error'}`,
           });
         }
       };
@@ -100,7 +100,7 @@ export default function Home() {
         }
       );
     }
-  }, [status, file, liveUrl]);
+  }, [status, file]);
 
   const handleViewFile = useCallback(() => {
     if (liveUrl) {
